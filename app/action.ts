@@ -68,7 +68,6 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
   return redirect("/dashboard/sites");
 }
 
-
 export async function CreatePostAction(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -194,8 +193,14 @@ export async function CreateSubscription() {
       address: "auto",
       name: "auto",
     },
-    success_url: "http://localhost:3000/dashboard/payment/success",
-    cancel_url: "http://localhost:3000/dashboard/payment/cancelled",
+    success_url:
+      process.env.NODE_ENV === "production"
+        ? "https://blog-jan-r6f6.vercel.app/dashboard/payment/success"
+        : "http://localhost:3000/dashboard/payment/success",
+    cancel_url:
+      process.env.NODE_ENV === "production"
+        ? "https://blog-jan-r6f6.vercel.app/dashboard/payment/cancelled"
+        : "http://localhost:3000/dashboard/payment/cancelled",
   });
 
   return redirect(session.url as string);
