@@ -14,6 +14,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 import DefaultImage from "@/public/default.png";
+import EmptyState from "@/app/components/dashboard/EmptyState";
 
 async function getData(userId: string) {
   const data = await prisma.site.findMany({
@@ -49,26 +50,14 @@ export default async function SitesRoute() {
       </div>
 
       {data === undefined || data.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
-          <div className="flex size-20 items-center justify-center rounded-full bg-primary/10">
-            <FileIcon className="size-10 text-primary" />
-          </div>
-          <h2 className="mt-6 text-xl font-semibold">
-            Ypu dont have any Sites created
-          </h2>
-          <p className="mb-8 mt-2 text-center text-sm leading-6 text-muted-foreground max-w-sm mx-auto">
-            You currently don't have any Sites. Please create some so that you
-            can see them right here
-          </p>
-          <Button asChild>
-            <Link href="/dashboard/sites/new">
-              <PlusCircleIcon className="mr-2 size-4" />
-              Create Site
-            </Link>
-          </Button>
-        </div>
+        <EmptyState
+          title="You dont have any Sites created"
+          description=" You currently don't have any Sites. Please create some so that you can see them right here"
+          buttonText="Create Site"
+          href="/dashboard/sites/new"
+        />
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
           {data.map((item) => (
             <Card key={item.id}>
               <h1>{item.name}</h1>
@@ -81,8 +70,8 @@ export default async function SitesRoute() {
                 height={200}
               />
               <CardHeader>
-                <CardTitle>{item.name}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
+                <CardTitle className="truncate">{item.name}</CardTitle>
+                <CardDescription className="line-clamp-3">{item.description}</CardDescription>
               </CardHeader>
               <CardFooter>
                 <Button asChild className="w-full">
